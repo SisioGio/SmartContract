@@ -7,32 +7,6 @@
 		"abi": [
 			{
 				"inputs": [],
-				"name": "addr1",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "addr2",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "beforeAll",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -40,100 +14,51 @@
 			},
 			{
 				"inputs": [],
-				"name": "initialPrice",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "initialSupply",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "owner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "regularSalePrice",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "stakingRewardRate",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "testInitialSupply",
+				"name": "checkIfUserCanBuyBeforePreSale",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "token",
-				"outputs": [
-					{
-						"internalType": "contract TokenPreSale",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
+				"name": "checkPreSaleActivation",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "weeklyIncreaseRate",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
+				"name": "checkPresaleStartedIsFalse",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "checkSuccess",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "testCalculatePricePreSaleEnded",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "testCalculatePricePreSaleNotStarted",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "testCalculateWeeks",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -144,13 +69,17 @@
 		},
 		"userdoc": {
 			"kind": "user",
-			"methods": {},
+			"methods": {
+				"beforeAll()": {
+					"notice": "'beforeAll' runs before all other tests More special functions are: 'beforeEach', 'beforeAll', 'afterEach' & 'afterAll'"
+				}
+			},
 			"version": 1
 		}
 	},
 	"settings": {
 		"compilationTarget": {
-			"tests/SimpleToken_test.sol": "testSuite"
+			"tests/newFile_test.sol": "testSuite"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -213,11 +142,11 @@
 			]
 		},
 		"contracts/SimpleToken.sol": {
-			"keccak256": "0xe29109dd6fab5f1b3fbc0d721398f8f7be342721f9c287a1878934a3788410b0",
+			"keccak256": "0x6d867c393c4630c65b7a4e0e9c94d583d3f7e4bd109c559720d12a59d7b33691",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ddfa8c7c50865361727304297420dc5be5a320c5e12c7eaac4967c79e2136159",
-				"dweb:/ipfs/Qmeg5EMmzMAN4HXMrrUx8gbV9NPbhTXidfpqP7aM2BoE5j"
+				"bzz-raw://c718a27c24d7ce9701b70508c65ad47e5b4a07f94b4902c1f5f33df13bc33240",
+				"dweb:/ipfs/Qmdk1S8gQKkEESRZ557EFFYyRy8haoCDT3zs1iAnPb9jft"
 			]
 		},
 		"remix_accounts.sol": {
@@ -236,12 +165,12 @@
 				"dweb:/ipfs/QmdkW1tT5iadBvaHMCoskhDGZKnfdg8o1D9CcoQYtdJet7"
 			]
 		},
-		"tests/SimpleToken_test.sol": {
-			"keccak256": "0xb3aa2f3249b2e44f651a0fcf103373467cbe1d3960a96d7fec92375cc41b6ca1",
+		"tests/newFile_test.sol": {
+			"keccak256": "0xc9c9339d2878233116105e29c8211f84e4b412de05883de15fa19bf640af249e",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://93c411ede39bcd82a2f9b0144c07eb18dcee4830857ce201adfce807a6a013d8",
-				"dweb:/ipfs/QmerBHq9ExA3v5xXj1hkxjDY1oKr7REKbM8XYNWNwq2J3u"
+				"bzz-raw://239be905ff300222a467e0aac5c3a8a3951a5e10a2086d613f23da13a576447d",
+				"dweb:/ipfs/QmYpV6iGjkYfVeosmpQjymUora5DUT2RTqE2vqTh2tiv9e"
 			]
 		}
 	},

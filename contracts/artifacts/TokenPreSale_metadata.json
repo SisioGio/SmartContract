@@ -203,7 +203,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "SaleEnded",
+				"name": "PreSaleEnded",
 				"type": "event"
 			},
 			{
@@ -222,7 +222,26 @@
 						"type": "uint256"
 					}
 				],
-				"name": "SaleStarted",
+				"name": "PreSaleStarted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "referrer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "rewardAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "ReferralRewardMinted",
 				"type": "event"
 			},
 			{
@@ -320,6 +339,25 @@
 				"type": "event"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "referral",
+						"type": "address"
+					}
+				],
+				"name": "UserWhitelisted",
+				"type": "event"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -387,6 +425,45 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "buyTokens",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "calculatePrice",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "referrer",
+						"type": "address"
+					}
+				],
+				"name": "calculateReferralReward",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -419,52 +496,8 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "user",
-						"type": "address"
-					}
-				],
-				"name": "getAccumulatedRewards",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "user",
-						"type": "address"
-					}
-				],
-				"name": "getStakedBalance",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "user",
-						"type": "address"
-					}
-				],
-				"name": "getStakingStartDate",
+				"inputs": [],
+				"name": "initialPrice",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -477,15 +510,9 @@
 			},
 			{
 				"inputs": [],
-				"name": "initialPrice",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
+				"name": "mintReferralReward",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -504,6 +531,96 @@
 			{
 				"inputs": [],
 				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "preSaleEndTime",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "preSaleStartTime",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "preSaleWeeksInWeeks",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "presaleIsActive",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "referralCounts",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "referrals",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -535,40 +652,14 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "saleEndTime",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "saleStartTime",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "_rewardRate",
-						"type": "uint256"
+						"internalType": "address",
+						"name": "referral",
+						"type": "address"
 					}
 				],
-				"name": "setStakingRewardRate",
+				"name": "signUpForWhitelist",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -626,7 +717,7 @@
 						"type": "address"
 					}
 				],
-				"name": "stakingRewards",
+				"name": "stakingTimestamp",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -640,20 +731,19 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "stakingTimestamp",
-				"outputs": [
+						"internalType": "uint256",
+						"name": "_startTime",
+						"type": "uint256"
+					},
 					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "_durationWeeks",
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "view",
+				"name": "startPreSale",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -780,6 +870,25 @@
 				],
 				"stateMutability": "view",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "whitelist",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -866,40 +975,8 @@
 				"balanceOf(address)": {
 					"details": "See {IERC20-balanceOf}."
 				},
-				"calculateStakingReward(address)": {
-					"params": {
-						"user": "Address of the user"
-					},
-					"returns": {
-						"_0": "The reward amount"
-					}
-				},
 				"decimals()": {
 					"details": "Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5.05` (`505 / 10 ** 2`). Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the default value returned by this function, unless it's overridden. NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}."
-				},
-				"getAccumulatedRewards(address)": {
-					"params": {
-						"user": "Address of the user"
-					},
-					"returns": {
-						"_0": "The accumulated staking rewards"
-					}
-				},
-				"getStakedBalance(address)": {
-					"params": {
-						"user": "Address of the user"
-					},
-					"returns": {
-						"_0": "The amount of tokens staked by the user"
-					}
-				},
-				"getStakingStartDate(address)": {
-					"params": {
-						"user": "Address of the user"
-					},
-					"returns": {
-						"_0": "The timestamp when the user started staking"
-					}
 				},
 				"name()": {
 					"details": "Returns the name of the token."
@@ -910,14 +987,9 @@
 				"renounceOwnership()": {
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
 				},
-				"setStakingRewardRate(uint256)": {
+				"startPreSale(uint256,uint256)": {
 					"params": {
-						"_rewardRate": "The new annual staking reward rate"
-					}
-				},
-				"stakeTokens(uint256)": {
-					"params": {
-						"amount": "Number of tokens to stake"
+						"_durationWeeks": "Duration of the pre-sale in weeks"
 					}
 				},
 				"symbol()": {
@@ -941,26 +1013,11 @@
 		"userdoc": {
 			"kind": "user",
 			"methods": {
-				"calculateStakingReward(address)": {
-					"notice": "Calculate the staking rewards for a user based on the staked amount and time staked (in weeks)"
+				"buyTokens()": {
+					"notice": "Buy tokens during the presale or regular sale."
 				},
-				"getAccumulatedRewards(address)": {
-					"notice": "Get the accumulated rewards for a user based on the duration of staking"
-				},
-				"getStakedBalance(address)": {
-					"notice": "Get the staked balance of a user"
-				},
-				"getStakingStartDate(address)": {
-					"notice": "Get the staking start date (timestamp) for a user"
-				},
-				"setStakingRewardRate(uint256)": {
-					"notice": "Set the staking reward rate (only callable by the owner)"
-				},
-				"stakeTokens(uint256)": {
-					"notice": "Stake tokens in the contract for rewards"
-				},
-				"unstakeTokens()": {
-					"notice": "Unstake tokens and receive accumulated rewards. Users are only allowed to unstake after 4 weeks."
+				"startPreSale(uint256,uint256)": {
+					"notice": "Start the pre-sale"
 				}
 			},
 			"version": 1
@@ -1031,11 +1088,11 @@
 			]
 		},
 		"contracts/SimpleToken.sol": {
-			"keccak256": "0xe29109dd6fab5f1b3fbc0d721398f8f7be342721f9c287a1878934a3788410b0",
+			"keccak256": "0x6d867c393c4630c65b7a4e0e9c94d583d3f7e4bd109c559720d12a59d7b33691",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ddfa8c7c50865361727304297420dc5be5a320c5e12c7eaac4967c79e2136159",
-				"dweb:/ipfs/Qmeg5EMmzMAN4HXMrrUx8gbV9NPbhTXidfpqP7aM2BoE5j"
+				"bzz-raw://c718a27c24d7ce9701b70508c65ad47e5b4a07f94b4902c1f5f33df13bc33240",
+				"dweb:/ipfs/Qmdk1S8gQKkEESRZ557EFFYyRy8haoCDT3zs1iAnPb9jft"
 			]
 		}
 	},

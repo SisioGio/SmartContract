@@ -5,132 +5,142 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract TokenPreSale is ERC20, Ownable {
-    uint256 public saleStartTime;
-    uint256 public saleEndTime;
-    uint256 public initialPrice;       // Initial price per token in Wei
+    bool public presaleIsActive;
+    uint256 public preSaleStartTime;
+    uint256 public preSaleEndTime;
+    uint256 public initialPrice;
     uint256 public regularSalePrice;
-    uint256 public weeklyIncreaseRate; // Weekly price increase percentage (e.g., 10 means 10%)
+    uint256 public weeklyIncreaseRate;
     uint256 public tokensSold;
+    uint256 public preSaleWeeksInWeeks;
+    uint256 public stakingRewardRate;
+    mapping(address => uint256) public stakedAmount;
+    mapping(address => uint256) public stakingTimestamp;
+    mapping(address => bool) public whitelist;
+    mapping(address => address) public referrals;
+    mapping(address => uint256) public referralCounts;
 
-    uint256 public stakingRewardRate;  // Annual staking reward rate in percentage
-    mapping(address => uint256) public stakedAmount;  // Amount of tokens staked by each user
-    mapping(address => uint256) public stakingTimestamp;  // Timestamp when user staked
-    mapping(address => uint256) public stakingRewards;  // Rewards accumulated by users
-    
-    event TokensPurchased(address indexed buyer, uint256 amount, uint256 cost);
-    event SaleStarted(uint256 startTime, uint256 endTime);
-    event SaleEnded(uint256 endTime);
+
+    event UserWhitelisted(address indexed user, address indexed referral);
+    event ReferralRewardMinted(address indexed referrer, uint256 rewardAmount);
+
+
     event TokensStaked(address indexed user, uint256 amount);
     event TokensUnstaked(address indexed user, uint256 amount, uint256 reward);
+    event TokensPurchased(address indexed buyer, uint256 amount, uint256 cost);
+    event PreSaleStarted(uint256 startTime, uint256 endTime);
+    event PreSaleEnded(uint256 endTime);
 
+    
     constructor(address initialOwner, uint256 totalSupply, uint256 _initialPrice, uint256 _weeklyIncreaseRate, uint256 _regularSalePrice, uint256 _stakingRewardRate) 
-    ERC20("NatureToken", "NTR") 
-    Ownable(initialOwner) 
+        ERC20("NatureToken", "NTR") 
+        Ownable(initialOwner) 
     {
-        _mint(address(this), totalSupply * 10 ** decimals()); // Mint specified total supply to the contract
+        _mint(address(this), totalSupply * 10 ** decimals());
         initialPrice = _initialPrice;
         weeklyIncreaseRate = _weeklyIncreaseRate;
-        regularSalePrice = _regularSalePrice;  // Set the regular sale price
-        stakingRewardRate = _stakingRewardRate; // Set the weekly staking reward rate
+        regularSalePrice = _regularSalePrice;
+        stakingRewardRate = _stakingRewardRate;
+        presaleIsActive = false;
     }
+    
 
-    // Other functions (startSale, getCurrentPrice, buyTokens, etc.) remain the same
+     function signUpForWhitelist(address referral) external {
+        require(!whitelist[msg.sender], "Already whitelisted");
+        require(msg.sender != referral, "Cannot refer yourself");
+        
+        whitelist[msg.sender] = true;
+        
+        if (referral != address(0) && whitelist[referral]) {
+            referrals[msg.sender] = referral;
+            referralCounts[referral] += 1;
+        }
+        
+        emit UserWhitelisted(msg.sender, referral);
+    }
+    
+    function calculateReferralReward(address referrer) public view returns (uint256) {
+        return referralCounts[referrer] * 500 * 10 ** decimals();
+    }
+    function mintReferralReward() external {
+            require(presaleIsActive==true,"Presale not started yet");
+            uint256 rewardAmount = calculateReferralReward(msg.sender);
+            require(rewardAmount > 0, "No rewards available");
+            _mint(msg.sender, rewardAmount);
+            referralCounts[msg.sender] = 0;
+            emit ReferralRewardMinted(msg.sender, rewardAmount);
+        }
 
     /**
-     * @notice Stake tokens in the contract for rewards
-     * @param amount Number of tokens to stake
+     * @notice Start the pre-sale
+     * @param _durationWeeks Duration of the pre-sale in weeks
      */
+    function startPreSale(uint256 _startTime, uint256 _durationWeeks) external onlyOwner {
+        // require(_startTime >= block.timestamp, "Start time must be in the future");
+        preSaleStartTime = _startTime;
+        preSaleEndTime = preSaleStartTime + (_durationWeeks * 1 weeks);
+        preSaleWeeksInWeeks = _durationWeeks;
+        presaleIsActive = true;
+        emit PreSaleStarted(preSaleStartTime, preSaleEndTime);
+    } 
+
+    function calculatePrice() public view returns (uint256) {
+        require(preSaleStartTime >=block.timestamp,"Pre-sale not started yet");
+        if ( block.timestamp > preSaleEndTime) {
+            return regularSalePrice;
+        }
+        
+        uint256 weeksElapsed = (block.timestamp - preSaleStartTime) / 1 weeks;
+        uint256 priceIncrease = ((regularSalePrice - initialPrice) * weeksElapsed) / preSaleWeeksInWeeks;
+        return initialPrice + priceIncrease;
+    }
+
+    /**
+ * @notice Buy tokens during the presale or regular sale.
+ */
+function buyTokens() external payable {
+    require(block.timestamp >= preSaleStartTime, "Sale not active.");
+    require(msg.value > 0, "Must send ETH to buy tokens.");
+
+    uint256 currentPrice = calculatePrice(); // Call the calculatePrice function
+
+    uint256 tokensToBuy = (msg.value * 10 ** uint256(decimals())) / currentPrice;
+    require(balanceOf(address(this)) >= tokensToBuy, "Not enough tokens available.");
+
+    _transfer(address(this), msg.sender, tokensToBuy);
+    tokensSold += tokensToBuy;
+
+    emit Transfer(address(this), msg.sender, tokensToBuy); // Emit transfer event
+}
+
+
     function stakeTokens(uint256 amount) external {
         require(amount > 0, "Amount must be greater than zero.");
-        require(balanceOf(msg.sender) >= amount, "Insufficient balance to stake.");
+        require(balanceOf(msg.sender) >= amount, "Insufficient balance.");
 
-        // Transfer the tokens from the user to the contract
         _transfer(msg.sender, address(this), amount);
-
-        // Update staking information
         stakedAmount[msg.sender] += amount;
         stakingTimestamp[msg.sender] = block.timestamp;
-
         emit TokensStaked(msg.sender, amount);
     }
 
-    /**
- * @notice Unstake tokens and receive accumulated rewards. Users are only allowed to unstake after 4 weeks.
- */
     function unstakeTokens() external {
-        uint256 stakedTokens = stakedAmount[msg.sender];
-        require(stakedTokens > 0, "No tokens staked.");
-
-        uint256 timeStaked = block.timestamp - stakingTimestamp[msg.sender];
-        uint256 stakingDurationInWeeks = timeStaked / 1 weeks; // Calculate staking duration in weeks
+        uint256 amount = stakedAmount[msg.sender];
+        require(amount > 0, "No tokens staked.");
+        require(block.timestamp >= stakingTimestamp[msg.sender] + 4 weeks, "Unstake only after 4 weeks.");
         
-        // Ensure the user has staked for at least 4 weeks
-        require(stakingDurationInWeeks >= 4, "Tokens can only be unstaked after 4 weeks.");
-
-        // Calculate staking rewards
         uint256 reward = calculateStakingReward(msg.sender);
-
-        // Update staked amount to 0
         stakedAmount[msg.sender] = 0;
         stakingTimestamp[msg.sender] = 0;
 
-        // Transfer staked tokens and rewards back to the user
-        _transfer(address(this), msg.sender, stakedTokens + reward);
-
-        emit TokensUnstaked(msg.sender, stakedTokens, reward);
+        _transfer(address(this), msg.sender, amount + reward);
+        emit TokensUnstaked(msg.sender, amount, reward);
     }
 
-    /**
-     * @notice Calculate the staking rewards for a user based on the staked amount and time staked (in weeks)
-     * @param user Address of the user
-     * @return The reward amount
-     */
     function calculateStakingReward(address user) public view returns (uint256) {
-        uint256 stakedTokens = stakedAmount[user];
-        if (stakedTokens == 0) {
-            return 0;
-        }
-
-        uint256 timeStaked = block.timestamp - stakingTimestamp[user];
-        uint256 stakingDurationInWeeks = timeStaked / 1 weeks; // Calculate duration in weeks
-
-        // Reward = staked amount * staking reward rate * time staked (in weeks)
-        uint256 reward = (stakedTokens * stakingRewardRate * stakingDurationInWeeks) / 100;
-        return reward;
+        uint256 weeksStaked = (block.timestamp - stakingTimestamp[user]) / 1 weeks;
+        return (stakedAmount[user] * stakingRewardRate * weeksStaked) / 100;
     }
 
-    /**
-     * @notice Set the staking reward rate (only callable by the owner)
-     * @param _rewardRate The new annual staking reward rate
-     */
-    function setStakingRewardRate(uint256 _rewardRate) external onlyOwner {
-        stakingRewardRate = _rewardRate;
-    }
-    /**
- * @notice Get the staked balance of a user
- * @param user Address of the user
- * @return The amount of tokens staked by the user
- */
-function getStakedBalance(address user) external view returns (uint256) {
-    return stakedAmount[user];
-}
 
-/**
- * @notice Get the staking start date (timestamp) for a user
- * @param user Address of the user
- * @return The timestamp when the user started staking
- */
-function getStakingStartDate(address user) external view returns (uint256) {
-    return stakingTimestamp[user];
-}
-
-/**
- * @notice Get the accumulated rewards for a user based on the duration of staking
- * @param user Address of the user
- * @return The accumulated staking rewards
- */
-function getAccumulatedRewards(address user) external view returns (uint256) {
-    return calculateStakingReward(user);
-}
-    // Emergency functions (withdrawFunds, recoverERC20) remain the same
 }
