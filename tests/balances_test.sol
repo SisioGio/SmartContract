@@ -87,20 +87,26 @@ contract testSuite {
         // Attempt to buy before presale starts (should fail)
         (bool success, ) = address(tknContract).call{value: msg.value}(abi.encodeWithSignature("buyTokens()"));
         Assert.equal(success, true  , "BuyTokens should succeed");
-        uint256 balanceAfter = tknContract.balanceOf(acc0);
-        Assert.equal(balanceAfter, 2  , "New balance should be 0");
-        uint testing = 0;
+        // uint256 balanceAfter = tknContract.balanceOf(acc0);
+        uint256 balanceAfter = tknContract.getBalance();
+        Assert.equal(balanceAfter, 2  , "New balance should be 2");
+        // uint testing = 0;
         // Assert.equal(balanceAfter, 2," New balance should be 0");
         // uint256 balanceAfter = tokenPreSale.balanceOf(buyer);
         // Assert.equal(balanceBefore, balanceAfter, "Buyer balance should not change before presale starts");
 
 
     }
-
-
-
-
-
+    // /// #sender: account-0
+    // function testCheckBalanceAfterPurhcase() public  payable {
+    //         uint256 balanceBefore = tknContract.getWalletBalance();
+    //         Assert.equal(balanceBefore, 2, "New balance should be 2");
+    // }
+/// #sender: account-0
+    // function testCheckBalanceAfterPurhcaseFromContract() public  payable {
+    //         uint256 balanceBefore = tknContract.getBalanceFromContract();
+    //         Assert.equal(balanceBefore, 2, "New balance should be 2");
+    // }
 
 }
     

@@ -24,17 +24,22 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_weeklyIncreaseRate",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
 						"name": "_regularSalePrice",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
 						"name": "_stakingRewardRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_minUnstakingPeriod",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_stakingRewardFrequency",
 						"type": "uint256"
 					}
 				],
@@ -477,13 +482,7 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "referrer",
-						"type": "address"
-					}
-				],
+				"inputs": [],
 				"name": "calculateReferralReward",
 				"outputs": [
 					{
@@ -496,13 +495,7 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "user",
-						"type": "address"
-					}
-				],
+				"inputs": [],
 				"name": "calculateStakingReward",
 				"outputs": [
 					{
@@ -527,7 +520,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "calculateWeeksElapsed",
+				"name": "calculateStepsElapsed",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -535,7 +528,7 @@
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "pure",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -553,7 +546,33 @@
 			},
 			{
 				"inputs": [],
-				"name": "getWalletBalance",
+				"name": "getBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getCurrentStep",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getStackedTokens",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -567,6 +586,19 @@
 			{
 				"inputs": [],
 				"name": "initialPrice",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "minUnstakingPeriod",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -638,7 +670,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "preSaleWeeksInWeeks",
+				"name": "preSaleSteps",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -767,6 +799,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "stakingRewardFrequency",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "stakingRewardRate",
 				"outputs": [
 					{
@@ -806,7 +851,12 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_durationWeeks",
+						"name": "_endTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "steps",
 						"type": "uint256"
 					}
 				],
@@ -928,19 +978,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "weeklyIncreaseRate",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -1056,11 +1093,6 @@
 				"renounceOwnership()": {
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
 				},
-				"startPreSale(uint256,uint256)": {
-					"params": {
-						"_durationWeeks": "Duration of the pre-sale in weeks"
-					}
-				},
 				"symbol()": {
 					"details": "Returns the symbol of the token, usually a shorter version of the name."
 				},
@@ -1085,7 +1117,7 @@
 				"buyTokens()": {
 					"notice": "Buy tokens during the presale or regular sale."
 				},
-				"startPreSale(uint256,uint256)": {
+				"startPreSale(uint256,uint256,uint256)": {
 					"notice": "Start the pre-sale"
 				}
 			},
@@ -1157,11 +1189,11 @@
 			]
 		},
 		"contracts/SimpleToken.sol": {
-			"keccak256": "0x602193a9cbd602f1ff0395540ef67e9fa9c6af5d41e4988b0afd3c5fe05bd7b7",
+			"keccak256": "0x1021866d38a703c5ffc7b6b579715dae953bf3c2383a333aa8685c66dc03fb81",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://42081b2e7feb52cb68054497ea0652b4d1a1aee565efe95eb17ed53dcf54cbc3",
-				"dweb:/ipfs/QmXwSjUioNtXemAFdJMyKqiZFgMLY54LNzPBEDgX4mF489"
+				"bzz-raw://7d36f196f57a71462d05723333fad88bffa1e702c2d64368fe96fb151aa4fc4e",
+				"dweb:/ipfs/QmXDReuZ49Nap1oRAGtoVBFmCJgw7iWotr9r7pAuTGPZXR"
 			]
 		}
 	},

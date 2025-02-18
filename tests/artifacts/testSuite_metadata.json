@@ -6,19 +6,6 @@
 	"output": {
 		"abi": [
 			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "balance",
-						"type": "uint256"
-					}
-				],
-				"name": "LogBalance",
-				"type": "event"
-			},
-			{
 				"inputs": [],
 				"name": "beforeAll",
 				"outputs": [],
@@ -27,86 +14,30 @@
 			},
 			{
 				"inputs": [],
-				"name": "checkIfUserCanBuyBeforePreSale",
+				"name": "checkSalesInitialization",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "checkSuccess2",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "checkPreSaleActivation",
+				"name": "testAcct0Balance",
 				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "checkPresaleStartedIsFalse",
+				"name": "testBuyTokens22",
 				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "checkSuccess",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "testAccountBalances",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "testCalculateWeeks",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "testCalculateWeeks0",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "testCalculateWeeks2",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "testCalculateWeeks3",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "testCalculatedPriceIncreaseAtWeek0",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "testCalculatedPriceIncreaseAtWeek2",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "testCalculatedPriceIncreaseAtWeek3",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "payable",
 				"type": "function"
 			}
 		],
@@ -121,8 +52,14 @@
 				"beforeAll()": {
 					"notice": "'beforeAll' runs before all other tests More special functions are: 'beforeEach', 'beforeAll', 'afterEach' & 'afterAll'"
 				},
-				"testAccountBalances()": {
-					"notice": "Test successful token purchase"
+				"checkSalesInitialization()": {
+					"notice": "#value: 2000000000000000"
+				},
+				"testAcct0Balance()": {
+					"notice": "#value: 2000000000000000 #sender: account-0"
+				},
+				"testBuyTokens22()": {
+					"notice": "#value: 2000000000000000 #sender: account-0"
 				}
 			},
 			"version": 1
@@ -130,7 +67,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"tests/initialization_test.sol": "testSuite"
+			"tests/balances_test.sol": "testSuite"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -193,11 +130,11 @@
 			]
 		},
 		"contracts/SimpleToken.sol": {
-			"keccak256": "0x602193a9cbd602f1ff0395540ef67e9fa9c6af5d41e4988b0afd3c5fe05bd7b7",
+			"keccak256": "0x68bcee13d9e682a70f609d9ad54c45b1e075af530f650c5023095830574caf3f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://42081b2e7feb52cb68054497ea0652b4d1a1aee565efe95eb17ed53dcf54cbc3",
-				"dweb:/ipfs/QmXwSjUioNtXemAFdJMyKqiZFgMLY54LNzPBEDgX4mF489"
+				"bzz-raw://8b87ed84b35ae918f05f62489db8b5da89a47c431970a661f3ff529c9b6e85f7",
+				"dweb:/ipfs/QmeP5jonxw3ymZVmDAaSTwAqnZEn8xoYPXFPE1F79jD1zF"
 			]
 		},
 		"remix_accounts.sol": {
@@ -216,12 +153,12 @@
 				"dweb:/ipfs/QmdkW1tT5iadBvaHMCoskhDGZKnfdg8o1D9CcoQYtdJet7"
 			]
 		},
-		"tests/initialization_test.sol": {
-			"keccak256": "0xccd0328e4255252f37d5c71e4f74e06ff4cf0e29f0f58c91cf92fd17a252e9d5",
+		"tests/balances_test.sol": {
+			"keccak256": "0xf1c83b91674e7c4f8a0011441a6e2419e934221f7fb73e1e065c4c0b05ff3e42",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://fa61a88e98ff96ca63971e75552f2b1f9fe2dde661eaa1e3dad755243de2ab3b",
-				"dweb:/ipfs/QmXfutiqnkU7qHyT4o1pBCgTBzzJA3Kkn6VWgic5pWcr52"
+				"bzz-raw://29e15eeaa458754106d9a29f77962a051ac9f6e542d985162aebc817be07f040",
+				"dweb:/ipfs/QmZg1BKSpRrqnwRrVLThuHez3ZoY7qo5v93JHHbHhZXnzF"
 			]
 		}
 	},

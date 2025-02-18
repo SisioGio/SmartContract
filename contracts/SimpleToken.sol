@@ -10,10 +10,13 @@ contract TokenPreSale is ERC20, Ownable {
     uint256 public preSaleEndTime;
     uint256 public initialPrice;
     uint256 public regularSalePrice;
-    uint256 public weeklyIncreaseRate;
+    
     uint256 public tokensSold;
-    uint256 public preSaleWeeksInWeeks;
+    uint256 public preSaleSteps;
     uint256 public stakingRewardRate;
+    uint256 public minUnstakingPeriod;
+    uint256 public stakingRewardFrequency;
+
     mapping(address => uint256) public stakedAmount;
     mapping(address => uint256) public stakingTimestamp;
     mapping(address => bool) public whitelist;
@@ -32,17 +35,19 @@ contract TokenPreSale is ERC20, Ownable {
     event PreSaleEnded(uint256 endTime);
 
     
-    constructor(address initialOwner, uint256 totalSupply, uint256 _initialPrice, uint256 _weeklyIncreaseRate, uint256 _regularSalePrice, uint256 _stakingRewardRate) 
+    constructor(address initialOwner, uint256 totalSupply, uint256 _initialPrice, uint256 _regularSalePrice, uint256 _stakingRewardRate,uint256 _minUnstakingPeriod,uint256 _stakingRewardFrequency ) 
         ERC20("NatureToken", "NTR") 
         Ownable(initialOwner) 
     {
         _mint(address(this), totalSupply * 10 ** decimals());
         initialPrice = _initialPrice;
-        weeklyIncreaseRate = _weeklyIncreaseRate;
         regularSalePrice = _regularSalePrice;
         stakingRewardRate = _stakingRewardRate;
         presaleIsActive = false;
+        minUnstakingPeriod  = _minUnstakingPeriod;
+        stakingRewardFrequency = _stakingRewardFrequency;
     }
+
     
 
      function signUpForWhitelist(address referral) external {
@@ -59,20 +64,14 @@ contract TokenPreSale is ERC20, Ownable {
         emit UserWhitelisted(msg.sender, referral);
     }
     
-    function calculateReferralReward(address referrer) public view returns (uint256) {
-        return referralCounts[referrer] * 500 * 10 ** decimals();
-    }
+    function calculateReferralReward() public view returns (uint256) {
 
-    function calculateWeeksElapsed(uint256 startTime, uint256 endTime) public pure returns (uint256) {
-        require(endTime >= startTime, "End time must be after start time");
-        uint256 weeksElapsed = (endTime - startTime) / 604800; // 604800 seconds in a week
-        return weeksElapsed;
+        return referralCounts[msg.sender] * 500 * 10 ** decimals();
     }
-
 
     function mintReferralReward() external {
             require(presaleIsActive==true,"Presale not started yet");
-            uint256 rewardAmount = calculateReferralReward(msg.sender);
+            uint256 rewardAmount = calculateReferralReward();
             require(rewardAmount > 0, "No rewards available");
             _mint(msg.sender, rewardAmount);
             referralCounts[msg.sender] = 0;
@@ -81,20 +80,29 @@ contract TokenPreSale is ERC20, Ownable {
 
     /**
      * @notice Start the pre-sale
-     * @param _durationWeeks Duration of the pre-sale in weeks
      */
-    function startPreSale(uint256 _startTime, uint256 _durationWeeks) external onlyOwner {
+    function startPreSale(uint256 _startTime, uint256 _endTime, uint256 steps) external onlyOwner {
         // require(_startTime >= block.timestamp, "Start time must be in the future");
         preSaleStartTime = _startTime;
-        preSaleEndTime = preSaleStartTime + (_durationWeeks * 1 weeks);
-        preSaleWeeksInWeeks = _durationWeeks;
+        preSaleEndTime = _endTime;
+        preSaleSteps = steps;
+        
         presaleIsActive = true;
         emit PreSaleStarted(preSaleStartTime, preSaleEndTime);
     } 
-
+    function calculateStepsElapsed(uint256 startTime, uint256 endTime) public view returns (uint256) {
+            require(endTime >= startTime, "End time must be after start time");
+            uint256 stepsElapsed = (endTime - startTime) / (preSaleEndTime-preSaleStartTime)/preSaleSteps; 
+            return stepsElapsed;
+        }
+    function getCurrentStep() public view returns (uint256){
+        require(block.timestamp >= preSaleStartTime, "End time must be after start time");
+            uint256 stepsElapsed = (block.timestamp - preSaleStartTime) / (preSaleEndTime-preSaleStartTime)/preSaleSteps;
+            return stepsElapsed;
+    }
     function calculatePriceIncrease() public view returns (uint256){
-        uint256 weeksElapsed =calculateWeeksElapsed(preSaleStartTime, block.timestamp);
-        uint256 priceIncrease = ((regularSalePrice - initialPrice) * weeksElapsed) / preSaleWeeksInWeeks;
+        uint256 stepsElapsed =calculateStepsElapsed(preSaleStartTime, block.timestamp);
+        uint256 priceIncrease = ((regularSalePrice - initialPrice) * stepsElapsed) / preSaleSteps;
         return priceIncrease;
     }
 
@@ -112,28 +120,28 @@ contract TokenPreSale is ERC20, Ownable {
     }
 
     /**
- * @notice Buy tokens during the presale or regular sale.
- */
-function buyTokens() external payable {
-    require(presaleIsActive, "Sale not active.");
-    require(msg.value > 0, "Must send ETH to buy tokens.");
+    * @notice Buy tokens during the presale or regular sale.
+    */
+    function buyTokens() external payable {
+        require(presaleIsActive, "Sale not active.");
+        require(msg.value > 0, "Must send ETH to buy tokens.");
 
-    uint256 currentPrice = calculatePrice(); // Call the calculatePrice function
+        uint256 currentPrice = calculatePrice(); // Call the calculatePrice function
 
-    uint256 tokensToBuy = (msg.value) / currentPrice;
-    require(balanceOf(address(this)) >= tokensToBuy, "Not enough tokens available.");
-    balances[msg.sender] += tokensToBuy;
-    _transfer(address(this), msg.sender, tokensToBuy);
-    tokensSold += tokensToBuy;
+        uint256 tokensToBuy = (msg.value) / currentPrice;
+        require(balanceOf(address(this)) >= tokensToBuy, "Not enough tokens available.");
+        balances[msg.sender] += tokensToBuy;
+        _transfer(address(this), msg.sender, tokensToBuy);
+        tokensSold += tokensToBuy;
 
-    emit Transfer(address(this), msg.sender, tokensToBuy); // Emit transfer event
-}
+        emit Transfer(address(this), msg.sender, tokensToBuy); // Emit transfer event
+    }
 
-function getWalletBalance() public view returns (uint256){
-    return balances[msg.sender];
 
-}
+    function getBalance() public view returns (uint256){
+        return balanceOf(msg.sender);
 
+    }
 
     function stakeTokens(uint256 amount) external {
         require(amount > 0, "Amount must be greater than zero.");
@@ -148,9 +156,9 @@ function getWalletBalance() public view returns (uint256){
     function unstakeTokens() external {
         uint256 amount = stakedAmount[msg.sender];
         require(amount > 0, "No tokens staked.");
-        require(block.timestamp >= stakingTimestamp[msg.sender] + 4 weeks, "Unstake only after 4 weeks.");
+        require(block.timestamp >= stakingTimestamp[msg.sender] + minUnstakingPeriod, "Unstake only after 4 weeks.");
         
-        uint256 reward = calculateStakingReward(msg.sender);
+        uint256 reward = calculateStakingReward();
         stakedAmount[msg.sender] = 0;
         stakingTimestamp[msg.sender] = 0;
 
@@ -158,10 +166,13 @@ function getWalletBalance() public view returns (uint256){
         emit TokensUnstaked(msg.sender, amount, reward);
     }
 
-    function calculateStakingReward(address user) public view returns (uint256) {
-        uint256 weeksStaked = (block.timestamp - stakingTimestamp[user]) / 1 weeks;
-        return (stakedAmount[user] * stakingRewardRate * weeksStaked) / 100;
+    function calculateStakingReward() public view returns (uint256) {
+        uint256 periodsStaked = (block.timestamp - stakingTimestamp[msg.sender]) / stakingRewardFrequency;
+        return (stakedAmount[msg.sender] * stakingRewardRate * periodsStaked) / 100;
     }
 
-
+function getStackedTokens() public view returns (uint256) {
+        
+        return stakedAmount[msg.sender];
+}
 }
