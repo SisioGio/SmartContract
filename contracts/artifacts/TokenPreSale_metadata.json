@@ -425,6 +425,25 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "balances",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "buyTokens",
 				"outputs": [],
@@ -434,6 +453,19 @@
 			{
 				"inputs": [],
 				"name": "calculatePrice",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "calculatePriceIncrease",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -483,6 +515,30 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "startTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "endTime",
+						"type": "uint256"
+					}
+				],
+				"name": "calculateWeeksElapsed",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "decimals",
 				"outputs": [
@@ -490,6 +546,19 @@
 						"internalType": "uint8",
 						"name": "",
 						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getWalletBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -1033,7 +1102,7 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
@@ -1088,11 +1157,11 @@
 			]
 		},
 		"contracts/SimpleToken.sol": {
-			"keccak256": "0x6d867c393c4630c65b7a4e0e9c94d583d3f7e4bd109c559720d12a59d7b33691",
+			"keccak256": "0x602193a9cbd602f1ff0395540ef67e9fa9c6af5d41e4988b0afd3c5fe05bd7b7",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c718a27c24d7ce9701b70508c65ad47e5b4a07f94b4902c1f5f33df13bc33240",
-				"dweb:/ipfs/Qmdk1S8gQKkEESRZ557EFFYyRy8haoCDT3zs1iAnPb9jft"
+				"bzz-raw://42081b2e7feb52cb68054497ea0652b4d1a1aee565efe95eb17ed53dcf54cbc3",
+				"dweb:/ipfs/QmXwSjUioNtXemAFdJMyKqiZFgMLY54LNzPBEDgX4mF489"
 			]
 		}
 	},

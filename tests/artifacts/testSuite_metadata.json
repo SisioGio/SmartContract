@@ -6,6 +6,19 @@
 	"output": {
 		"abi": [
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "balance",
+						"type": "uint256"
+					}
+				],
+				"name": "LogBalance",
+				"type": "event"
+			},
+			{
 				"inputs": [],
 				"name": "beforeAll",
 				"outputs": [],
@@ -42,14 +55,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "testCalculatePricePreSaleEnded",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "testCalculatePricePreSaleNotStarted",
+				"name": "testAccountBalances",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -57,6 +63,48 @@
 			{
 				"inputs": [],
 				"name": "testCalculateWeeks",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "testCalculateWeeks0",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "testCalculateWeeks2",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "testCalculateWeeks3",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "testCalculatedPriceIncreaseAtWeek0",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "testCalculatedPriceIncreaseAtWeek2",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "testCalculatedPriceIncreaseAtWeek3",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -72,6 +120,9 @@
 			"methods": {
 				"beforeAll()": {
 					"notice": "'beforeAll' runs before all other tests More special functions are: 'beforeEach', 'beforeAll', 'afterEach' & 'afterAll'"
+				},
+				"testAccountBalances()": {
+					"notice": "Test successful token purchase"
 				}
 			},
 			"version": 1
@@ -79,7 +130,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"tests/newFile_test.sol": "testSuite"
+			"tests/initialization_test.sol": "testSuite"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -87,7 +138,7 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
@@ -142,11 +193,11 @@
 			]
 		},
 		"contracts/SimpleToken.sol": {
-			"keccak256": "0x6d867c393c4630c65b7a4e0e9c94d583d3f7e4bd109c559720d12a59d7b33691",
+			"keccak256": "0x118127b67cf28ddc3df1fb77c1a93f5a1fe20f104ec4ba61eeab5e177e4b1987",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c718a27c24d7ce9701b70508c65ad47e5b4a07f94b4902c1f5f33df13bc33240",
-				"dweb:/ipfs/Qmdk1S8gQKkEESRZ557EFFYyRy8haoCDT3zs1iAnPb9jft"
+				"bzz-raw://fe26badba9cfee9713957672b862957850da807232b0d761a07b89914864e58e",
+				"dweb:/ipfs/QmUGz7yQXfyQ8FudyyvEzydpgGgMN3fDESmwwy7jRykSoY"
 			]
 		},
 		"remix_accounts.sol": {
@@ -165,12 +216,12 @@
 				"dweb:/ipfs/QmdkW1tT5iadBvaHMCoskhDGZKnfdg8o1D9CcoQYtdJet7"
 			]
 		},
-		"tests/newFile_test.sol": {
-			"keccak256": "0xc9c9339d2878233116105e29c8211f84e4b412de05883de15fa19bf640af249e",
+		"tests/initialization_test.sol": {
+			"keccak256": "0xccd0328e4255252f37d5c71e4f74e06ff4cf0e29f0f58c91cf92fd17a252e9d5",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://239be905ff300222a467e0aac5c3a8a3951a5e10a2086d613f23da13a576447d",
-				"dweb:/ipfs/QmYpV6iGjkYfVeosmpQjymUora5DUT2RTqE2vqTh2tiv9e"
+				"bzz-raw://fa61a88e98ff96ca63971e75552f2b1f9fe2dde661eaa1e3dad755243de2ab3b",
+				"dweb:/ipfs/QmXfutiqnkU7qHyT4o1pBCgTBzzJA3Kkn6VWgic5pWcr52"
 			]
 		}
 	},

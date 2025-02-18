@@ -19,7 +19,7 @@ contract TokenPreSale is ERC20, Ownable {
     mapping(address => bool) public whitelist;
     mapping(address => address) public referrals;
     mapping(address => uint256) public referralCounts;
-
+    mapping(address => uint256) public balances;
 
     event UserWhitelisted(address indexed user, address indexed referral);
     event ReferralRewardMinted(address indexed referrer, uint256 rewardAmount);
@@ -62,6 +62,14 @@ contract TokenPreSale is ERC20, Ownable {
     function calculateReferralReward(address referrer) public view returns (uint256) {
         return referralCounts[referrer] * 500 * 10 ** decimals();
     }
+
+    function calculateWeeksElapsed(uint256 startTime, uint256 endTime) public pure returns (uint256) {
+        require(endTime >= startTime, "End time must be after start time");
+        uint256 weeksElapsed = (endTime - startTime) / 604800; // 604800 seconds in a week
+        return weeksElapsed;
+    }
+
+
     function mintReferralReward() external {
             require(presaleIsActive==true,"Presale not started yet");
             uint256 rewardAmount = calculateReferralReward(msg.sender);
@@ -84,33 +92,46 @@ contract TokenPreSale is ERC20, Ownable {
         emit PreSaleStarted(preSaleStartTime, preSaleEndTime);
     } 
 
+    function calculatePriceIncrease() public view returns (uint256){
+        uint256 weeksElapsed =calculateWeeksElapsed(preSaleStartTime, block.timestamp);
+        uint256 priceIncrease = ((regularSalePrice - initialPrice) * weeksElapsed) / preSaleWeeksInWeeks;
+        return priceIncrease;
+    }
+
+
+    
     function calculatePrice() public view returns (uint256) {
-        require(preSaleStartTime >=block.timestamp,"Pre-sale not started yet");
+        require(presaleIsActive,"Pre-sale not started yet");
         if ( block.timestamp > preSaleEndTime) {
             return regularSalePrice;
         }
-        
-        uint256 weeksElapsed = (block.timestamp - preSaleStartTime) / 1 weeks;
-        uint256 priceIncrease = ((regularSalePrice - initialPrice) * weeksElapsed) / preSaleWeeksInWeeks;
-        return initialPrice + priceIncrease;
+
+        uint256 priceIncrease = calculatePriceIncrease();
+        uint256 currentPrice = initialPrice+priceIncrease;
+        return currentPrice;
     }
 
     /**
  * @notice Buy tokens during the presale or regular sale.
  */
 function buyTokens() external payable {
-    require(block.timestamp >= preSaleStartTime, "Sale not active.");
+    require(presaleIsActive, "Sale not active.");
     require(msg.value > 0, "Must send ETH to buy tokens.");
 
     uint256 currentPrice = calculatePrice(); // Call the calculatePrice function
 
     uint256 tokensToBuy = (msg.value * 10 ** uint256(decimals())) / currentPrice;
     require(balanceOf(address(this)) >= tokensToBuy, "Not enough tokens available.");
-
+    balances[msg.sender] += tokensToBuy;
     _transfer(address(this), msg.sender, tokensToBuy);
     tokensSold += tokensToBuy;
 
     emit Transfer(address(this), msg.sender, tokensToBuy); // Emit transfer event
+}
+
+function getWalletBalance() public view returns (uint256){
+    return balances[msg.sender];
+
 }
 
 
