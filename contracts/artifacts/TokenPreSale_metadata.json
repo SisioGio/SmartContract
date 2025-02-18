@@ -585,6 +585,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "getStackingPeriod",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "initialPrice",
 				"outputs": [
 					{
@@ -1189,11 +1202,11 @@
 			]
 		},
 		"contracts/SimpleToken.sol": {
-			"keccak256": "0x1021866d38a703c5ffc7b6b579715dae953bf3c2383a333aa8685c66dc03fb81",
+			"keccak256": "0x7f9573bd7bb5034000e168eddd1a4958b1a06e66859cd8ac2f2f59570b390d99",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://7d36f196f57a71462d05723333fad88bffa1e702c2d64368fe96fb151aa4fc4e",
-				"dweb:/ipfs/QmXDReuZ49Nap1oRAGtoVBFmCJgw7iWotr9r7pAuTGPZXR"
+				"bzz-raw://c6af41be5d8f7d5ff4acc85cbe99c3518a56a2683f4c2f0403b04f2a29c63d04",
+				"dweb:/ipfs/QmR6LVod5LNJaGZ3PgsuerSHfHbgbEnpxuwxuAV3x9QkDq"
 			]
 		}
 	},

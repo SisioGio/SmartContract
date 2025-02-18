@@ -171,8 +171,13 @@ contract TokenPreSale is ERC20, Ownable {
         return (stakedAmount[msg.sender] * stakingRewardRate * periodsStaked) / 100;
     }
 
-function getStackedTokens() public view returns (uint256) {
-        
-        return stakedAmount[msg.sender];
-}
+    function getStackedTokens() public view returns (uint256) {
+            
+            return stakedAmount[msg.sender];
+    }
+
+    function getStackingPeriod() public view returns (uint256) {
+            
+            return stakingTimestamp[msg.sender] + minUnstakingPeriod;
+    }
 }
