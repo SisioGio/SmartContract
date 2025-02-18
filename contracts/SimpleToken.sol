@@ -120,7 +120,7 @@ function buyTokens() external payable {
 
     uint256 currentPrice = calculatePrice(); // Call the calculatePrice function
 
-    uint256 tokensToBuy = (msg.value * 10 ** uint256(decimals())) / currentPrice;
+    uint256 tokensToBuy = (msg.value) / currentPrice;
     require(balanceOf(address(this)) >= tokensToBuy, "Not enough tokens available.");
     balances[msg.sender] += tokensToBuy;
     _transfer(address(this), msg.sender, tokensToBuy);

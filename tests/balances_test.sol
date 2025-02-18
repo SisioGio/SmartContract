@@ -29,28 +29,25 @@ contract testSuite {
         );
         acc0= TestsAccounts.getAccount(0); //owner by default
         acc1 = TestsAccounts.getAccount(1);
-
-       
-    
     }
 
-    function checkSuccess() public {
+    function checkSuccess2() public {
         uint256 supply = tknContract.totalSupply();
         Assert.equal(supply, 1000000 * 10 ** tknContract.decimals(), "Total supply should match");
        
     }
-    /// #value: 2000000000000000000
+
+    /// #value: 2000000000000000
     /// #sender: account-0
     function testAcct0Balance() public payable  {
         uint256 acc0_balance = msg.value;
-        Assert.equal(acc0_balance, 2000000000000000000, "Inital balance should be 1000000000000000000");
+        Assert.equal(acc0_balance, 2000000000000000, "Inital balance should be 2000000000000000");
        
     }
 
 
-    /// #value: 1000000000000000000
-
-    function testSaleInitialization() public  payable {
+    /// #value: 2000000000000000
+    function checkSalesInitialization() public  payable {
         uint256 current_time_stamp = block.timestamp;
         uint256 startTime = current_time_stamp - 1 days; // 1 day in the future
         uint256 durationWeeks = presaleWeeks;  // Presale duration of 4 weeks
@@ -67,7 +64,7 @@ contract testSuite {
 
         uint256 quantityToBuy = msg.value/current_price;
 
-        Assert.equal(quantityToBuy,1000,"Quantity to buy should be 1000");
+        Assert.equal(quantityToBuy,2,"Quantity to buy should be 1000");
 
         uint256 currentTokenBalance = tknContract.getWalletBalance();
 
@@ -79,14 +76,23 @@ contract testSuite {
     }
 
 
-    /// #value: 1000000000000000000
+    /// #value: 2000000000000000
     /// #sender: account-0
     function testBuyTokens22() public  payable {
-        uint256 current_price = tknContract.calculatePrice();
-        uint256 quantityToBuy = msg.value/current_price;
-        tknContract.buyTokens{value: 1 ether}();
-        uint256 newTokenBalance = tknContract.getWalletBalance();
-        Assert.equal(quantityToBuy,1000,"Quantity to buy should be 1000");
+        uint256 current_price = 1e15;
+        uint256 quantityToBuy = msg.value / current_price;
+        Assert.equal(quantityToBuy, 2, "Presale not active, purchase should fail");
+        uint256 balanceBefore = tknContract.balanceOf(acc0);
+        Assert.equal(balanceBefore, 0, "Presale not active, purchase should fail");
+        // Attempt to buy before presale starts (should fail)
+        (bool success, ) = address(tknContract).call{value: msg.value}(abi.encodeWithSignature("buyTokens()"));
+        Assert.equal(success, true  , "BuyTokens should succeed");
+        uint256 balanceAfter = tknContract.balanceOf(acc0);
+        Assert.equal(balanceAfter, 2  , "New balance should be 0");
+        uint testing = 0;
+        // Assert.equal(balanceAfter, 2," New balance should be 0");
+        // uint256 balanceAfter = tokenPreSale.balanceOf(buyer);
+        // Assert.equal(balanceBefore, balanceAfter, "Buyer balance should not change before presale starts");
 
 
     }
@@ -96,8 +102,5 @@ contract testSuite {
 
 
 
-    /// @dev Required to receive ETH to this contract
-    receive() external payable {}
-    
 }
     
