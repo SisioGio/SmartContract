@@ -1202,11 +1202,11 @@
 			]
 		},
 		"contracts/SimpleToken.sol": {
-			"keccak256": "0x7f9573bd7bb5034000e168eddd1a4958b1a06e66859cd8ac2f2f59570b390d99",
+			"keccak256": "0x39c83ad5f403de278d9ce8d6783d8b71d9fcb046e99687373f1c668a5c6974c1",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c6af41be5d8f7d5ff4acc85cbe99c3518a56a2683f4c2f0403b04f2a29c63d04",
-				"dweb:/ipfs/QmR6LVod5LNJaGZ3PgsuerSHfHbgbEnpxuwxuAV3x9QkDq"
+				"bzz-raw://4e788ffb9535f7280de5165c6263541a7a3db40529e5e3e3632a9cf9933596fe",
+				"dweb:/ipfs/QmVfyeEZhDG5NuNiM9tqSwWJ4oWUftVtig6FWuHWBpRPG4"
 			]
 		}
 	},

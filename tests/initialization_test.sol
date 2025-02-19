@@ -23,9 +23,11 @@ contract testSuite {
             address(this), // initialOwner
             1000000,       // totalSupply
             1e15,          // initialPrice (0.001 ETH)
-            10,            // weeklyIncreaseRate (10%)
             2e15,          // regularSalePrice (0.002 ETH)
-            5              // stakingRewardRate (5%)
+            5,             // stakingRewardRate (5%)
+            60*60*24*30,            // _minUnstakingPeriod
+            60*60*24*1          //_stakingRewardFrequency
+
         );
         currentTimestamp = block.timestamp;
         Assert.equal(uint(1), uint(1), "1 should be equal to 1");
@@ -33,7 +35,7 @@ contract testSuite {
 
     function checkSuccess() public {
         uint256 supply = tokenPreSale.totalSupply();
-        Assert.equal(supply, 1000000 * 10 ** tokenPreSale.decimals(), "Total supply should match");
+        Assert.equal(supply, 1000000, "Total supply should match");
        
     }
     function checkPresaleStartedIsFalse() public {
@@ -57,10 +59,11 @@ contract testSuite {
 
     
   function checkPreSaleActivation() public {
-        uint256 startTime = currentTimestamp + 1 days; // 1 day in the future
-        uint256 durationWeeks = 4;  // Presale duration of 4 weeks
+        uint256 startTime = currentTimestamp; // 1 day in the future
+        uint256 endTime = currentTimestamp + 4 days;
+        uint256 steps = 4;  // Presale duration of 4 weeks
         // Call the startPreSale function
-        tokenPreSale.startPreSale(startTime, durationWeeks);
+        tokenPreSale.startPreSale(startTime,endTime,steps);
 
         bool presaleStarted = tokenPreSale.presaleIsActive();
         Assert.equal(true,presaleStarted, "Presale should be active");
@@ -91,66 +94,54 @@ contract testSuite {
 //     }
 // Test: Ensure calculateWeeks returns the correct number of weeks
     function testCalculateWeeks() public {
-        uint256 startTime = currentTimestamp - 7 days; // 100 days ago
-        uint256 endTime = currentTimestamp; // 100 days ago
+        uint256 startTime = currentTimestamp; // 100 days ago
+        uint256 endTime = currentTimestamp+ 1 hours; // 100 days ago
         // Calculate the number of weeks that have passed since startTime
-        uint256 weeksElapsed = tokenPreSale.calculateWeeksElapsed(startTime,endTime);
+        uint256 stepsElapsed = tokenPreSale.calculateStepsElapsed(startTime,endTime);
 
         // Since 100 days is roughly 14 weeks (100 / 7 = 14), we expect weeksElapsed to be 14
-        uint256 expectedWeeks = 1; // 100 days = 14 weeks
+        uint256 expectedSteps = 1; // 100 days = 14 weeks
 
         // Assert that the number of weeks is correctly calculated
-        Assert.equal(weeksElapsed, expectedWeeks, "The calculated weeks should be 1.");
+        Assert.equal(stepsElapsed, expectedSteps, "The calculated weeks should be 1.");
     }
 
 // Test: Ensure calculateWeeks returns the correct number of weeks
     function testCalculateWeeks2() public {
-        uint256 startTime = currentTimestamp - 14 days; // 100 days ago
-        uint256 endTime = currentTimestamp; // 100 days ago
-        // Calculate the number of weeks that have passed since startTime
-        uint256 weeksElapsed = tokenPreSale.calculateWeeksElapsed(startTime,endTime);
-
-        // Since 100 days is roughly 14 weeks (100 / 7 = 14), we expect weeksElapsed to be 14
-        uint256 expectedWeeks = 2; // 100 days = 14 weeks
-
-        // Assert that the number of weeks is correctly calculated
-        Assert.equal(weeksElapsed, expectedWeeks, "The calculated weeks should be 2.");
+        uint256 startTime = currentTimestamp - 2 days;
+        uint256 endTime = currentTimestamp; 
+        uint256 stepsElapsed = tokenPreSale.calculateStepsElapsed(startTime,endTime);
+        uint256 expectedSteps = 2; 
+        Assert.equal(stepsElapsed, expectedSteps, "The calculated steps should be 2.");
     }
 
     // Test: Ensure calculateWeeks returns the correct number of weeks
     function testCalculateWeeks0() public {
-        uint256 startTime = currentTimestamp - 5 days; // 100 days ago
-        uint256 endTime = currentTimestamp; // 100 days ago
-        // Calculate the number of weeks that have passed since startTime
-        uint256 weeksElapsed = tokenPreSale.calculateWeeksElapsed(startTime,endTime);
-
-        // Since 100 days is roughly 14 weeks (100 / 7 = 14), we expect weeksElapsed to be 14
-        uint256 expectedWeeks = 0; // 100 days = 14 weeks
+        uint256 startTime = currentTimestamp - 3 days; 
+        uint256 endTime = currentTimestamp;
+        uint256 stepsElapsed = tokenPreSale.calculateStepsElapsed(startTime,endTime);
+        uint256 expectedSteps = 0;
 
         // Assert that the number of weeks is correctly calculated
-        Assert.equal(weeksElapsed, expectedWeeks, "The calculated weeks should be 2.");
+        Assert.equal(stepsElapsed, expectedSteps, "The calculated weeks should be 2.");
     }
 
     // Test: Ensure calculateWeeks returns the correct number of weeks
     function testCalculateWeeks3() public {
-        uint256 startTime = currentTimestamp - 24 days; // 100 days ago
-        uint256 endTime = currentTimestamp; // 100 days ago
-        // Calculate the number of weeks that have passed since startTime
-        uint256 weeksElapsed = tokenPreSale.calculateWeeksElapsed(startTime,endTime);
-
-        // Since 100 days is roughly 14 weeks (100 / 7 = 14), we expect weeksElapsed to be 14
-        uint256 expectedWeeks = 3; // 100 days = 14 weeks
-
-        // Assert that the number of weeks is correctly calculated
-        Assert.equal(weeksElapsed, expectedWeeks, "The calculated weeks should be 2.");
+        uint256 startTime = currentTimestamp - 4 days;
+        uint256 endTime = currentTimestamp; 
+        uint256 stepsElapsed = tokenPreSale.calculateStepsElapsed(startTime,endTime);
+        uint256 expectedSteps = 4;
+        Assert.equal(stepsElapsed, expectedSteps, "The calculated weeks should be 2.");
     }
 
 // Test: Ensure calculatePrice returns regularSalePrice if pre-sale has ended
     function testCalculatedPriceIncreaseAtWeek0() public {
-        uint256 startTime = currentTimestamp - 5 days;   // 10 days in the past, presale should have ended
+        uint256 startTime = currentTimestamp - 5 days;
+        uint256 endTime = currentTimestamp -1;
         uint256 durationWeeks = 4;  // Presale duration of 4 weeks
         
-        tokenPreSale.startPreSale(startTime, durationWeeks);
+        tokenPreSale.startPreSale(startTime, endTime);
         uint256 calculatedPriceIncrease = tokenPreSale.calculatePriceIncrease();
         uint256 expectedPriceIncrease = 0;
 

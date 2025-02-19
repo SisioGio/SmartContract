@@ -39,7 +39,7 @@ contract TokenPreSale is ERC20, Ownable {
         ERC20("NatureToken", "NTR") 
         Ownable(initialOwner) 
     {
-        _mint(address(this), totalSupply * 10 ** decimals());
+        _mint(address(this), totalSupply );
         initialPrice = _initialPrice;
         regularSalePrice = _regularSalePrice;
         stakingRewardRate = _stakingRewardRate;
